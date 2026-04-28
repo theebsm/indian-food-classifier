@@ -1,0 +1,6 @@
+model/efficientnet_indian_food.pth
+__pycache__/
+*.pyc
+.env
+test_images/
+*.zip
