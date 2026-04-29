@@ -4,8 +4,6 @@ from torchvision import transforms
 from torchvision.models import efficientnet_b0
 from PIL import Image
 import io
-import os
-import gdown
 
 SELECTED_CLASSES = [
     'idli', 'masala_dosa', 'dhokla', 'paani_puri', 'pakode',
@@ -14,39 +12,28 @@ SELECTED_CLASSES = [
 ]
 
 MODEL_PATH = 'model/efficientnet_indian_food.pth'
-FILE_ID = '1Wg3NcdCTOh-xYf6hkP0bSQkqwC2PIvH5'
-
-def download_model():
-    if not os.path.exists(MODEL_PATH):
-        print("Downloading model from Google Drive...")
-        os.makedirs('model', exist_ok=True)
-        # Use fuzzy=True to handle Google Drive links better
-        gdown.download(
-            id=FILE_ID,
-            output=MODEL_PATH,
-            quiet=False,
-            fuzzy=True
-        )
-        print("✅ Model downloaded!")
-    else:
-        print("✅ Model already exists!")
 
 def load_model():
-    download_model()
+    print(f"Loading model from {MODEL_PATH}...")
     model = efficientnet_b0(weights=None)
     model.classifier = nn.Sequential(
         nn.Dropout(p=0.3),
         nn.Linear(model.classifier[1].in_features, 15)
     )
-    model.load_state_dict(torch.load(MODEL_PATH, map_location='cpu'))
+    model.load_state_dict(
+        torch.load(MODEL_PATH, map_location='cpu')
+    )
     model.eval()
+    print("✅ Model loaded!")
     return model
 
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                         std=[0.229, 0.224, 0.225])
+    transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+    )
 ])
 
 def predict(model, image_bytes):
