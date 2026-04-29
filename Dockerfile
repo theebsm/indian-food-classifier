@@ -8,7 +8,13 @@ RUN apt-get update && apt-get install -y \
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir torch==2.1.0+cpu torchvision==0.16.0+cpu \
+# Install numpy first with correct version
+RUN pip install --no-cache-dir numpy==1.26.4
+
+# Install CPU only PyTorch
+RUN pip install --no-cache-dir \
+    torch==2.1.0+cpu \
+    torchvision==0.16.0+cpu \
     -f https://download.pytorch.org/whl/torch_stable.html
 
 RUN pip install --no-cache-dir -r requirements.txt

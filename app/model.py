@@ -20,8 +20,13 @@ def download_model():
     if not os.path.exists(MODEL_PATH):
         print("Downloading model from Google Drive...")
         os.makedirs('model', exist_ok=True)
-        url = f'https://drive.google.com/uc?id={FILE_ID}'
-        gdown.download(url, MODEL_PATH, quiet=False)
+        # Use fuzzy=True to handle Google Drive links better
+        gdown.download(
+            id=FILE_ID,
+            output=MODEL_PATH,
+            quiet=False,
+            fuzzy=True
+        )
         print("✅ Model downloaded!")
     else:
         print("✅ Model already exists!")
