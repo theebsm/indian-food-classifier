@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 from PIL import Image
 import io
+import os
 import plotly.graph_objects as go
 import plotly.express as px
 
@@ -44,7 +45,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-API_URL = "http://fastapi:8000"
+API_URL = os.getenv("API_URL", "https://indian-food-classifier-production.up.railway.app")
 
 # ---- Header ----
 st.markdown('<p class="main-header">🍛 Indian Food Classifier Dashboard</p>',
